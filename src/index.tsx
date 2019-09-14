@@ -1,10 +1,24 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
+import React from "react";
+import ReactDOM from "react-dom";
+import { BrowserRouter as Router } from "react-router-dom";
+import MuiThemeProvider from "@material-ui/core/styles/MuiThemeProvider";
+import { StylesProvider } from "@material-ui/styles";
 
-ReactDOM.render(<App />, document.getElementById('root'));
+import "./index.css";
+import App from "./App";
+import * as serviceWorker from "./serviceWorker";
+import theme from "./theme/theme";
+
+ReactDOM.render(
+  <StylesProvider injectFirst>
+    <MuiThemeProvider theme={theme}>
+      <Router>
+        <App />
+      </Router>
+    </MuiThemeProvider>
+  </StylesProvider>,
+  document.getElementById("root")
+);
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
