@@ -4,18 +4,17 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import Drawer from "@material-ui/core/Drawer";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
+import Dashboard from "@material-ui/icons/Dashboard";
 
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
 import IconButton from "@material-ui/core/IconButton";
-import Badge from "@material-ui/core/Badge";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
-import Paper from "@material-ui/core/Paper";
-import Link from "@material-ui/core/Link";
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-import NotificationsIcon from "@material-ui/icons/Notifications";
+
+import User from "./User";
 
 import SideMenu from "./SideMenu";
 
@@ -23,11 +22,13 @@ const drawerWidth = 240;
 
 interface Props {
   children: React.ReactNode;
-  onChangePath: (path: string) => void;
+  currentCaption: string;
+  onChangePath: (path: string, caption: string) => void;
 }
 
 const AppLayout: React.FC<Props> = ({
   children,
+  currentCaption,
   onChangePath
 }): JSX.Element => {
   const [open, setOpen] = React.useState(true);
@@ -56,21 +57,21 @@ const AppLayout: React.FC<Props> = ({
             </MenuButton>
           )}
           <Title component="h1" variant="h6" color="inherit" noWrap>
-            Dashboard
+            {currentCaption}
           </Title>
-          <IconButton color="inherit">
-            <Badge badgeContent={4} color="secondary">
-              <NotificationsIcon />
-            </Badge>
-          </IconButton>
+          <User />
         </TopToolbar>
       </TopBar>
       <LeftSideBar variant="permanent" open={open}>
-        <ToolbarIcon>
+        <Caption>
+          <Logo color="primary" variant="h6">
+            <DashboardIcon />
+            Megastorage
+          </Logo>
           <IconButton onClick={handleDrawerClose}>
             <ChevronLeftIcon />
           </IconButton>
-        </ToolbarIcon>
+        </Caption>
         <Divider />
         <SideMenu onChange={onChangePath} />
       </LeftSideBar>
@@ -132,11 +133,24 @@ const Title = styled(Typography)`
   flex-grow: 1;
 `;
 
-const ToolbarIcon = styled.div`
+const Logo = styled(Typography)`
+  font-size: 16px;
+  display: flex;
+  text-transform: uppercase;
+  font-weight: bold;
+  align-items: center;
+  text-shadow: 7px 5px #e4e4e4;
+`;
+
+const DashboardIcon = styled(Dashboard)`
+  margin-right: 5px;
+`;
+
+const Caption = styled.div`
   display: flex;
   padding: 0 8px;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: space-between;
   min-height: 64px;
 `;
 

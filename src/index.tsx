@@ -1,19 +1,28 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { BrowserRouter as Router } from "react-router-dom";
+import { BrowserRouter as Router, Route } from "react-router-dom";
 import MuiThemeProvider from "@material-ui/core/styles/MuiThemeProvider";
 import { StylesProvider } from "@material-ui/styles";
 
+import routes from "routes";
 import "./index.css";
-import App from "./App";
-import * as serviceWorker from "./serviceWorker";
 import theme from "./theme/theme";
+import * as serviceWorker from "./serviceWorker";
+import PrivateRoute from "components/PrivateRoute";
+
+import App from "./App";
+import Auth from "./Auth";
 
 ReactDOM.render(
   <StylesProvider injectFirst>
     <MuiThemeProvider theme={theme}>
       <Router>
-        <App />
+        <Route path={routes.auth.signin.path} component={Auth} />
+        <PrivateRoute
+          path={routes.root.path}
+          redirectTo={routes.auth.signin.path}
+          component={App}
+        />
       </Router>
     </MuiThemeProvider>
   </StylesProvider>,

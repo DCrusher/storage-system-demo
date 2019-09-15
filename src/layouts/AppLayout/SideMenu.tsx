@@ -9,7 +9,7 @@ import Route from "models/Route";
 import routes from "routes";
 
 interface Props {
-  onChange: (path: string) => void;
+  onChange: (path: string, caption: string) => void;
 }
 
 const appRoutes: Route[] = Object.values(routes.app);
@@ -18,7 +18,7 @@ const SideMenu: React.FC<Props> = ({ onChange }): JSX.Element => (
   <List>
     {appRoutes.map(
       ({ path, Icon, caption }): JSX.Element => (
-        <ListItem key={caption} onClick={() => onChange(path)} button>
+        <ListItem key={caption} onClick={() => onChange(path, caption)} button>
           <ListItemIcon>
             <Icon />
           </ListItemIcon>
