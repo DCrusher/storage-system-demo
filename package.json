@@ -36,8 +36,10 @@
     "@types/react-jss": "^8.6.4",
     "@types/react-router-dom": "^4.3.5",
     "@types/styled-components": "^4.1.19",
+    "@types/yup": "^0.26.23",
     "effector": "^20.2.1",
     "effector-react": "^20.3.0",
+    "formik": "^1.5.8",
     "js-cookie": "^2.2.1",
     "jwt-simple": "^0.5.6",
     "react": "^16.9.0",
@@ -46,7 +48,8 @@
     "react-scripts": "3.1.1",
     "styled-components": "^4.3.2",
     "typescript": "3.6.3",
-    "use-react-router": "^1.0.7"
+    "use-react-router": "^1.0.7",
+    "yup": "^0.27.0"
   },
   "devDependencies": {
     "babel-plugin-root-import": "^6.4.1",

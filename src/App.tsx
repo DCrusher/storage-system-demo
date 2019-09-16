@@ -21,8 +21,6 @@ const App: React.FC = () => {
 
   return (
     <AppLayout onChangePath={handleChangePath} currentCaption={currentCaption}>
-      <MyButton variant="outlined">material ui button</MyButton>
-
       {appRoutes.map(({ path, Scene }) => (
         <Route key={Scene} path={path} component={Scene} />
       ))}
