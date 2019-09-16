@@ -1,16 +1,64 @@
-import { createStore, createEvent } from "effector";
+import { createDomain } from "effector";
+import uuid from "uuid";
 
-export const addStorage = createEvent("createStorage");
-export const removeStorage = createEvent("removeStorage");
+import Storage, { StorageWithProducts } from "models/Storage";
+import StorageSerivce from "services/StorageSerivce";
+import { addAllocation } from "store/storagesProducts";
 
-export default createStore({
-  storages: []
-})
-  .on(addStorage, (state, payload) => {
-    console.log(payload);
-    return state;
+const StorageDomain = createDomain();
+
+export const createStorage = StorageDomain.effect<
+  StorageWithProducts,
+  StorageWithProducts,
+  Error
+>();
+export const updateStorage = StorageDomain.effect<
+  StorageWithProducts,
+  StorageWithProducts,
+  Error
+>();
+export const deleteStorage = StorageDomain.effect<Storage, Storage, Error>();
+
+createStorage.use(StorageSerivce.createStorage);
+updateStorage.use(StorageSerivce.updateStorage);
+deleteStorage.use(StorageSerivce.deleteStorage);
+
+const initialState: Storage[] = [
+  {
+    id: uuid(),
+    name: "storage 1"
+  }
+];
+
+export interface StorageState {
+  storages: Storage[];
+}
+
+export const StoragesStore = StorageDomain.store<Storage[]>(initialState)
+  .on(createStorage.done, (state, { result }) => {
+    const { products, ...storage } = result;
+
+    products &&
+      products.forEach(({ id, quantity }: any) => {
+        addAllocation({
+          storageId: storage.id,
+          productId: id,
+          quantity
+        });
+      });
+
+    return [...state, storage];
   })
-  .on(removeStorage, (state, payload) => {
-    console.log(payload);
-    return state;
-  });
+  .on(updateStorage.done, (state, { result }) => {
+    const { products, ...storage } = result;
+
+    // TODO: implement updating allocation
+
+    const storagesWithoutUpdated = state.filter(
+      storage => storage.id !== result.id
+    );
+    return [...storagesWithoutUpdated, storage];
+  })
+  .on(deleteStorage.done, (state, { result }) =>
+    state.filter(storage => storage.id !== result.id)
+  );
