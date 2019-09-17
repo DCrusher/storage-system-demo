@@ -8,3 +8,8 @@ export interface ProductIdWithQuantity {
   productId: string;
   quantity: number;
 }
+
+export interface StorageIdWithQuantity {
+  storageId: string;
+  quantity: number;
+}

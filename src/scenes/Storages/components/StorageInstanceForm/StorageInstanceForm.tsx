@@ -1,5 +1,6 @@
 import * as React from "react";
 import styled from "styled-components";
+import { useStore } from "effector-react";
 import { Formik, FieldArray } from "formik";
 import * as Yup from "yup";
 import {
@@ -8,29 +9,17 @@ import {
   Grid,
   Fab,
   TextField,
-  IconButton
+  IconButton,
+  Select,
+  FormControl,
+  InputLabel,
+  MenuItem
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import DeleteIcon from "@material-ui/icons/Delete";
 
-import StorageWithProducts from "models/Storage";
 import ProductIdWithQuantity from "models/StorageProduct";
-import Product from "models/Product";
-
-// interface Props {
-//   open: boolean;
-//   onClose: () => void;
-// }
-
-// interface FormValues {
-//   name?: string;
-//   products?: Product[];
-// }
-
-// interface FormProps {
-//   handleSubmit: () => void;
-//   values: FormValues;
-// }
+import { ProductsStore } from "store/products";
 
 interface Props {
   initialValues: any;
@@ -43,6 +32,8 @@ const StorageInstanceForm: React.FC<Props> = ({
   submitCaption,
   onSubmit
 }): JSX.Element => {
+  const products = useStore(ProductsStore);
+
   return (
     <Formik
       initialValues={initialValues}
@@ -86,7 +77,27 @@ const StorageInstanceForm: React.FC<Props> = ({
                         (product: ProductIdWithQuantity, index: number) => (
                           <Grid container alignItems="center" spacing={1}>
                             <Grid item xs={6}>
-                              <TextField
+                              <FormControlSelect>
+                                <InputLabel htmlFor="product-select">
+                                  Product
+                                </InputLabel>
+                                <Select
+                                  value={product.productId}
+                                  inputProps={{
+                                    name: `products.${index}.productId`,
+                                    id: "product-select"
+                                  }}
+                                  onChange={handleChange}
+                                  autoWidth
+                                >
+                                  {products.map(({ id, name }) => (
+                                    <MenuItem key={id} value={id}>
+                                      {name}
+                                    </MenuItem>
+                                  ))}
+                                </Select>
+                              </FormControlSelect>
+                              {/* <TextField
                                 name={`products.${index}.productId`}
                                 label="Product"
                                 margin="normal"
@@ -94,7 +105,7 @@ const StorageInstanceForm: React.FC<Props> = ({
                                 onChange={handleChange}
                                 value={product.productId}
                                 fullWidth
-                              />
+                              /> */}
                             </Grid>
                             <Grid item xs={4}>
                               <TextField
@@ -176,4 +187,10 @@ const SubmitButton = styled(Button)`
   margin-top: 40px;
   width: 100%;
   border-radius: 0;
+`;
+
+const FormControlSelect = styled(FormControl)`
+  width: 100%;
+  margin-top: 16px;
+  margin-bottom: 8px;
 `;

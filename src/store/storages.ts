@@ -3,7 +3,10 @@ import uuid from "uuid";
 
 import Storage, { StorageWithProducts } from "models/Storage";
 import StorageSerivce from "services/StorageSerivce";
-import { addAllocation } from "store/storagesProducts";
+import {
+  addAllocation,
+  changeAllocationForStorage
+} from "store/storagesProducts";
 
 const StorageDomain = createDomain();
 
@@ -39,10 +42,10 @@ export const StoragesStore = StorageDomain.store<Storage[]>(initialState)
     const { products, ...storage } = result;
 
     products &&
-      products.forEach(({ id, quantity }: any) => {
+      products.forEach(({ productId, quantity }: any) => {
         addAllocation({
           storageId: storage.id,
-          productId: id,
+          productId,
           quantity
         });
       });
@@ -52,7 +55,7 @@ export const StoragesStore = StorageDomain.store<Storage[]>(initialState)
   .on(updateStorage.done, (state, { result }) => {
     const { products, ...storage } = result;
 
-    // TODO: implement updating allocation
+    changeAllocationForStorage(result);
 
     const storagesWithoutUpdated = state.filter(
       storage => storage.id !== result.id

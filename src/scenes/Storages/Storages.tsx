@@ -38,6 +38,7 @@ const Storages: React.FC = () => {
 
   const handleOpenAddDialog = () => {
     setInstanceOperation(instanceOperations.create);
+    setCurrentStorage(emptyStorage);
   };
 
   const handleCloseDialog = () => {
@@ -49,7 +50,6 @@ const Storages: React.FC = () => {
   };
 
   const handleOpenEdit = (storageWithProducts: any) => {
-    // const storageToEdit = { ...storage, products: [] };
     setInstanceOperation(instanceOperations.edit);
     setCurrentStorage(storageWithProducts);
   };
