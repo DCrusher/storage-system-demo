@@ -1,7 +1,6 @@
 import * as React from "react";
 import styled from "styled-components";
 import { FieldArray } from "formik";
-import { useStore } from "effector-react";
 import AddIcon from "@material-ui/icons/Add";
 import DeleteIcon from "@material-ui/icons/Delete";
 import {
@@ -18,19 +17,17 @@ import {
 import { StorageIdWithQuantity } from "models/StorageProduct";
 import Storage from "models/Storage";
 
-import { StoragesStore } from "store/storages";
-
 interface Props {
   storagesWithQuantity: StorageIdWithQuantity[];
+  storages: Storage[];
   onChange: (event: React.ChangeEvent<any>) => void;
 }
 
-const ProductStorages: React.FC<Props> = ({
+const ProductStoragesFields: React.FC<Props> = ({
   storagesWithQuantity,
+  storages,
   onChange
 }): JSX.Element => {
-  const storages = useStore(StoragesStore);
-
   return (
     <FieldArray
       name="storages"
@@ -102,7 +99,7 @@ const ProductStorages: React.FC<Props> = ({
   );
 };
 
-export default ProductStorages;
+export default ProductStoragesFields;
 
 const ProductsCaption = styled.div`
   color: gray;

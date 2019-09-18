@@ -3,7 +3,11 @@ import styled from "styled-components";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { Button, Paper, TextField } from "@material-ui/core";
-import StorageProducts from "../StorageProducts";
+import { useStore } from "effector-react";
+
+import { ProductsStore } from "store/products";
+import FormErrors from "components/FormErrors";
+import StorageProductsFields from "../StorageProductsFields";
 
 interface Props {
   initialValues: any;
@@ -11,19 +15,30 @@ interface Props {
   submitCaption: string;
 }
 
+const validationSchema = Yup.object().shape({
+  name: Yup.string().required("Please input name")
+});
+
 const StorageInstanceForm: React.FC<Props> = ({
   initialValues,
   submitCaption,
   onSubmit
 }): JSX.Element => {
+  const products = useStore(ProductsStore);
+
   return (
     <Formik
       initialValues={initialValues}
-      validate={values => {}}
+      validationSchema={validationSchema}
+      validateOnChange={false}
       onSubmit={onSubmit}
     >
-      {({ values, handleSubmit, handleChange }) => (
+      {({ values, handleSubmit, handleChange, errors }) => (
         <WrapperForm onSubmit={handleSubmit}>
+          <FormMessages>
+            {errors && <FormErrors errors={errors} />}
+          </FormMessages>
+
           <FormContent>
             <TextField
               id="name"
@@ -36,8 +51,9 @@ const StorageInstanceForm: React.FC<Props> = ({
             />
 
             <ProductsWrapper>
-              <StorageProducts
+              <StorageProductsFields
                 productsWithQuantity={values.products}
+                products={products}
                 onChange={handleChange}
               />
             </ProductsWrapper>
@@ -68,6 +84,10 @@ export default StorageInstanceForm;
 //     setSubmitting(false);
 //   }
 // })(StorageInstanceForm);
+
+const FormMessages = styled.div`
+  margin: 0 20px;
+`;
 
 const WrapperForm = styled.form`
   width: 500px;

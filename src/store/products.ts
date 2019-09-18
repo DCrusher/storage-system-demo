@@ -30,6 +30,14 @@ const initialState: Product[] = [
   {
     id: uuid(),
     name: "product 1"
+  },
+  {
+    id: uuid(),
+    name: "product 2"
+  },
+  {
+    id: uuid(),
+    name: "product 3"
   }
 ];
 

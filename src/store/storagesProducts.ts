@@ -15,9 +15,7 @@ export const changeAllocationForStorage = StorageProductDomain.event<
 export const changeAllocationForProduct = StorageProductDomain.event<
   ProductByStorages
 >();
-
-// addStorage.use(StorageSerivce.addStorage);
-// deleteStorage.use(StorageSerivce.deleteStorage);
+export const redistributeStorage = StorageProductDomain.event<any>();
 
 const initialState: StorageProduct[] = [];
 
@@ -60,4 +58,16 @@ export const StoragesProductsStore = StorageProductDomain.store<
     }));
 
     return [...productsWithoutCurrent, ...newAllocation];
+  })
+  .on(redistributeStorage, (state, payload) => {
+    const {
+      storage: { id: storageId },
+      allocation
+    } = payload;
+
+    const storagesWithoutCurrent = state.filter(
+      storage => storage.storageId !== storageId
+    );
+
+    return [...storagesWithoutCurrent, ...allocation];
   });

@@ -16,19 +16,20 @@ import {
 } from "@material-ui/core";
 
 import { ProductIdWithQuantity } from "models/StorageProduct";
+import Product from "models/Product";
 import { ProductsStore } from "store/products";
 
 interface Props {
   productsWithQuantity: ProductIdWithQuantity[];
+  products: Product[];
   onChange: (event: React.ChangeEvent<any>) => void;
 }
 
-const StorageProducts: React.FC<Props> = ({
+const StorageProductsFields: React.FC<Props> = ({
   productsWithQuantity,
+  products,
   onChange
 }): JSX.Element => {
-  const products = useStore(ProductsStore);
-
   return (
     <FieldArray
       name="products"
@@ -100,7 +101,7 @@ const StorageProducts: React.FC<Props> = ({
   );
 };
 
-export default StorageProducts;
+export default StorageProductsFields;
 
 const ProductsCaption = styled.div`
   color: gray;

@@ -30,6 +30,14 @@ const initialState: Storage[] = [
   {
     id: uuid(),
     name: "storage 1"
+  },
+  {
+    id: uuid(),
+    name: "storage 2"
+  },
+  {
+    id: uuid(),
+    name: "storage 3"
   }
 ];
 
