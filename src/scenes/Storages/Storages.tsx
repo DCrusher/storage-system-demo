@@ -37,31 +37,6 @@ const SUBMIT_CAPTIONS = {
   [instanceOperations.redistribute]: "Redestribute and delete"
 };
 
-// interface InstanceActionProps {
-//   operation: "create" | "edit" | "redistribute";
-// }
-
-// const StorageInstanceAction: React.FC<InstanceActionProps> = ({
-//   operation
-// }): JSX.Element => {
-//   if (operation === instanceOperations.redistribute) {
-//     return <span>redistrubute</span>;
-//   } else {
-//     return;
-//   }
-//   // {
-//   //   instanceOperation === instanceOperations.redistribute ? (
-//   //     <span>redestribution</span>
-//   //   ) : (
-//   //     <StorageInstanceForm
-//   //       initialValues={currentStorage}
-//   //       onSubmit={isEdit ? handleSubmitUpdate : handleSubmitCreate}
-//   //       submitCaption={SUBMIT_CAPTIONS[instanceOperation]}
-//   //     />
-//   //   );
-//   // }
-// };
-
 const Storages: React.FC = () => {
   const [instanceOperation, setInstanceOperation] = React.useState<
     string | null
@@ -82,7 +57,6 @@ const Storages: React.FC = () => {
   const handleOpensDelete = (storage: Storage) => {
     setCurrentStorage(storage);
     setInstanceOperation(instanceOperations.redistribute);
-    // deleteStorage(storage);
   };
 
   const handleOpenEdit = (storageWithProducts: any) => {
