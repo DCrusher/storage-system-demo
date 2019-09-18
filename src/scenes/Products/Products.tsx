@@ -15,7 +15,12 @@ import { deleteProduct, createProduct, updateProduct } from "store/products";
 const emptyProduct = {
   id: "",
   name: "",
-  storages: []
+  storages: [
+    {
+      storageId: "",
+      quantity: 0
+    }
+  ]
 };
 
 const DIALOG_TITLES = {

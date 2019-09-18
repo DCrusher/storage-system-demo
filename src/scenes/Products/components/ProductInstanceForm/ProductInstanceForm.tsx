@@ -1,27 +1,10 @@
 import * as React from "react";
 import styled from "styled-components";
-import { useStore } from "effector-react";
-import { Formik, FieldArray } from "formik";
+import { Formik } from "formik";
 import * as Yup from "yup";
-import {
-  Button,
-  Paper,
-  Grid,
-  Fab,
-  TextField,
-  IconButton,
-  Select,
-  FormControl,
-  InputLabel,
-  MenuItem
-} from "@material-ui/core";
-import AddIcon from "@material-ui/icons/Add";
-import DeleteIcon from "@material-ui/icons/Delete";
+import { Button, Paper, TextField, FormControl } from "@material-ui/core";
 
-import Storage from "models/Storage";
-import { StorageIdWithQuantity } from "models/StorageProduct";
-
-import { StoragesStore } from "store/storages";
+import ProductStorages from "../ProductStorages";
 
 interface Props {
   initialValues: any;
@@ -34,8 +17,6 @@ const ProductInstanceForm: React.FC<Props> = ({
   submitCaption,
   onSubmit
 }): JSX.Element => {
-  const storages = useStore(StoragesStore);
-
   return (
     <Formik
       initialValues={initialValues}
@@ -56,74 +37,9 @@ const ProductInstanceForm: React.FC<Props> = ({
             />
 
             <ProductsWrapper>
-              <FieldArray
-                name="storages"
-                render={arrayHelpers => (
-                  <>
-                    <ProductsCaption>
-                      <span>Storages</span>
-                      <Fab
-                        variant="extended"
-                        size="medium"
-                        aria-label="Add"
-                        onClick={() => arrayHelpers.push("")}
-                      >
-                        <AddIcon />
-                        Add
-                      </Fab>
-                    </ProductsCaption>
-
-                    {values.storages &&
-                      values.storages.length > 0 &&
-                      values.storages.map(
-                        (storage: StorageIdWithQuantity, index: number) => (
-                          <Grid container alignItems="center" spacing={1}>
-                            <Grid item xs={6}>
-                              <FormControlSelect>
-                                <InputLabel htmlFor="storage-select">
-                                  Storage
-                                </InputLabel>
-                                <Select
-                                  value={storage.storageId}
-                                  inputProps={{
-                                    name: `storages.${index}.storageId`,
-                                    id: "storage-select"
-                                  }}
-                                  onChange={handleChange}
-                                  autoWidth
-                                >
-                                  {storages.map(({ id, name }) => (
-                                    <MenuItem key={id} value={id}>
-                                      {name}
-                                    </MenuItem>
-                                  ))}
-                                </Select>
-                              </FormControlSelect>
-                            </Grid>
-                            <Grid item xs={4}>
-                              <TextField
-                                name={`storages.${index}.quantity`}
-                                label="Quantity"
-                                margin="normal"
-                                type="number"
-                                onChange={handleChange}
-                                value={storage.quantity}
-                                fullWidth
-                              />
-                            </Grid>
-                            <Grid item xs={2}>
-                              <IconButton
-                                aria-label="delete"
-                                onClick={() => arrayHelpers.remove(index)}
-                              >
-                                <DeleteIcon />
-                              </IconButton>
-                            </Grid>
-                          </Grid>
-                        )
-                      )}
-                  </>
-                )}
+              <ProductStorages
+                storagesWithQuantity={values.storages}
+                onChange={handleChange}
               />
             </ProductsWrapper>
           </FormContent>

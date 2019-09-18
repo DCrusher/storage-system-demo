@@ -15,12 +15,17 @@ import { deleteStorage, createStorage, updateStorage } from "store/storages";
 const emptyStorage = {
   id: "",
   name: "",
-  products: []
+  products: [
+    {
+      productId: "",
+      quantity: 0
+    }
+  ]
 };
 
 const DIALOG_TITLES = {
-  create: "Creating storage",
-  edit: "Editing storage"
+  [instanceOperations.create]: "Creating storage",
+  [instanceOperations.edit]: "Editing storage"
 };
 
 const SUBMIT_CAPTIONS = {
@@ -46,7 +51,8 @@ const Storages: React.FC = () => {
   };
 
   const handleDelete = (storage: Storage) => {
-    deleteStorage(storage);
+    setInstanceOperation(instanceOperations.redistribute)
+    // deleteStorage(storage);
   };
 
   const handleOpenEdit = (storageWithProducts: any) => {
@@ -83,7 +89,7 @@ const Storages: React.FC = () => {
       <Dialog
         open={Boolean(instanceOperation)}
         onClose={handleCloseDialog}
-        title={isEdit ? DIALOG_TITLES.edit : DIALOG_TITLES.create}
+        title={DIALOG_TITLES[]}
       >
         <StorageInstanceForm
           initialValues={currentStorage}

@@ -1,5 +1,4 @@
-import Product from "./Product";
-import ProductIdWithQuantity from "./StorageProduct";
+import { ProductIdWithQuantity } from "./StorageProduct";
 
 export default interface Storage {
   id: string;
