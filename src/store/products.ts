@@ -1,5 +1,4 @@
 import { createDomain } from "effector";
-import uuid from "uuid";
 
 import Product, { ProductByStorages } from "models/Product";
 import ProductService from "services/ProductService";
@@ -7,6 +6,7 @@ import {
   addAllocation,
   changeAllocationForProduct
 } from "store/storagesProducts";
+import { seedProduct } from "utils/seeds";
 
 const ProductDomain = createDomain();
 
@@ -27,18 +27,9 @@ updateProduct.use(ProductService.updateProduct);
 deleteProduct.use(ProductService.deleteProduct);
 
 const initialState: Product[] = [
-  {
-    id: uuid(),
-    name: "product 1"
-  },
-  {
-    id: uuid(),
-    name: "product 2"
-  },
-  {
-    id: uuid(),
-    name: "product 3"
-  }
+  seedProduct({ name: "product 1", totalQuantity: 10 }),
+  seedProduct({ name: "product 2", totalQuantity: 20 }),
+  seedProduct({ name: "product 3", totalQuantity: 30 })
 ];
 
 export interface ProductState {
@@ -48,8 +39,6 @@ export interface ProductState {
 export const ProductsStore = ProductDomain.store<Product[]>(initialState)
   .on(createProduct.done, (state, { result }) => {
     const { storages, ...product } = result;
-
-    console.log(result);
 
     storages &&
       storages.forEach(({ storageId, quantity }: any) => {
@@ -72,6 +61,12 @@ export const ProductsStore = ProductDomain.store<Product[]>(initialState)
     );
     return [...storagesWithoutUpdated, product];
   })
-  .on(deleteProduct.done, (state, { result }) =>
-    state.filter(product => product.id !== result.id)
-  );
+  .on(deleteProduct.done, (state, { result }) => {
+    // TODO: implement clear of storages
+    // changeAllocationForProduct({
+    //   id: result.id,
+    //   storages: null
+    // });
+
+    return state.filter(product => product.id !== result.id);
+  });

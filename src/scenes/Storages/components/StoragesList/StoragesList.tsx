@@ -9,7 +9,7 @@ import {
   Divider
 } from "@material-ui/core";
 import { useStore } from "effector-react";
-import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
+import StoreIcon from "@material-ui/icons/Store";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 
@@ -46,7 +46,7 @@ const StoragesList: React.FC<Props> = ({ onEdit, onDelete }): JSX.Element => {
           <React.Fragment key={storage.id}>
             <ListItem button>
               <ListItemAvatar>
-                <ShoppingCartIcon />
+                <StoreIcon />
               </ListItemAvatar>
               <ListItemText
                 primary={storage.name}

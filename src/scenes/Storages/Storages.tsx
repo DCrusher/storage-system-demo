@@ -80,6 +80,11 @@ const Storages: React.FC = () => {
     setInstanceOperation(instanceOperations.void);
   };
 
+  const handleDelete = (storage: Storage) => {
+    deleteStorage(storage);
+    setInstanceOperation(instanceOperations.void);
+  };
+
   const isEdit = instanceOperation === instanceOperations.edit;
 
   return (
@@ -107,6 +112,7 @@ const Storages: React.FC = () => {
               submitCaption={SUBMIT_CAPTIONS[instanceOperation || ""]}
               storage={currentStorage}
               onSubmit={handleRedistributeAndDelete}
+              onDelete={handleDelete}
             />
           ) : (
             <StorageInstanceForm

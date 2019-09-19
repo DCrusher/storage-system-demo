@@ -18,7 +18,7 @@ function myStringify(
   replacer?: ((key: string, value: any) => any) | (number | string)[] | null
 ) {
   return JSON.stringify(data, replacer as any, space).replace(
-    /({|}|\[|\])/gi,
+    /({|}|\[|\]|null)/gi,
     ""
   );
 }

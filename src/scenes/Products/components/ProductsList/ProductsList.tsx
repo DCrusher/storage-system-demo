@@ -6,6 +6,8 @@ import {
   ListItemText,
   ListItemSecondaryAction,
   IconButton,
+  Badge,
+  Tooltip,
   Divider
 } from "@material-ui/core";
 import { useStore } from "effector-react";
@@ -13,14 +15,16 @@ import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 
-import Storage from "models/Storage";
+import Product from "models/Product";
 import { ProductIdWithQuantity } from "models/StorageProduct";
 import { ProductsStore } from "store/products";
 import { StoragesProductsStore } from "store/storagesProducts";
 
+const MAX_SHOWN_COUNT = 1000;
+
 interface Props {
   onEdit: (storage: any) => void;
-  onDelete: (storage: Storage) => void;
+  onDelete: (product: Product) => void;
 }
 
 const Products: React.FC<Props> = ({ onEdit, onDelete }): JSX.Element => {
@@ -33,6 +37,7 @@ const Products: React.FC<Props> = ({ onEdit, onDelete }): JSX.Element => {
         let storagesCount = 0;
         let productsTotalQuantity = 0;
         const storages: any[] = [];
+        const { id, name, totalQuantity } = product;
 
         storagesProducts.forEach(({ storageId, productId, quantity }) => {
           if (productId === product.id) {
@@ -43,14 +48,27 @@ const Products: React.FC<Props> = ({ onEdit, onDelete }): JSX.Element => {
         });
 
         return (
-          <React.Fragment key={product.id}>
+          <React.Fragment key={id}>
             <ListItem button>
               <ListItemAvatar>
-                <ShoppingCartIcon />
+                <Tooltip title={`Total quantity of product: ${totalQuantity}`}>
+                  <Badge
+                    badgeContent={totalQuantity}
+                    color="primary"
+                    max={MAX_SHOWN_COUNT}
+                    anchorOrigin={{
+                      horizontal: "left",
+                      vertical: "bottom"
+                    }}
+                  >
+                    <ShoppingCartIcon />
+                  </Badge>
+                </Tooltip>
               </ListItemAvatar>
+
               <ListItemText
-                primary={product.name}
-                secondary={`Storages: ${storagesCount}, Total quantity: ${productsTotalQuantity}`}
+                primary={name}
+                secondary={`Storages: ${storagesCount}, Quantity in strages: ${productsTotalQuantity}`}
               />
               <ListItemSecondaryAction>
                 <IconButton

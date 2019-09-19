@@ -11,10 +11,12 @@ import Product, { ProductByStorages } from "models/Product";
 import ProductInstanceForm from "./components/ProductInstanceForm";
 import ProductsList from "./components/ProductsList";
 import { deleteProduct, createProduct, updateProduct } from "store/products";
+import ProductDeleteConfirm from "./components/ProductDeleteConfirm";
 
 const emptyProduct = {
   id: "",
   name: "",
+  totalQuantity: 1,
   storages: [
     {
       storageId: "",
@@ -24,13 +26,15 @@ const emptyProduct = {
 };
 
 const DIALOG_TITLES = {
-  create: "Creating product",
-  edit: "Editing product"
+  [instanceOperations.create]: "Creating product",
+  [instanceOperations.edit]: "Editing product",
+  [instanceOperations.delete]: "Deleting product"
 };
 
 const SUBMIT_CAPTIONS = {
-  create: "Create",
-  edit: "Update"
+  [instanceOperations.create]: "Create",
+  [instanceOperations.delete]: "Delete",
+  [instanceOperations.edit]: "Update"
 };
 
 const Products: React.FC = () => {
@@ -50,13 +54,19 @@ const Products: React.FC = () => {
     setInstanceOperation(instanceOperations.void);
   };
 
-  const handleDelete = (products: Product) => {
-    deleteProduct(products);
+  const handleDelete = (product: Product) => () => {
+    deleteProduct(product);
+    setInstanceOperation(instanceOperations.void);
   };
 
-  const handleOpenEdit = (productByStorages: any) => {
+  const handleOpenDelete = (product: any) => {
+    setInstanceOperation(instanceOperations.delete);
+    setCurrentProduct(product);
+  };
+
+  const handleOpenEdit = (product: any) => {
     setInstanceOperation(instanceOperations.edit);
-    setCurrentProduct(productByStorages);
+    setCurrentProduct(product);
   };
 
   const handleSubmitCreate = (productByStorages: ProductByStorages) => {
@@ -69,7 +79,9 @@ const Products: React.FC = () => {
     setInstanceOperation(instanceOperations.void);
   };
 
+  const isDialogOpen = Boolean(instanceOperation);
   const isEdit = instanceOperation === instanceOperations.edit;
+  const isDelete = instanceOperation === instanceOperations.delete;
 
   return (
     <Wrapper>
@@ -84,18 +96,24 @@ const Products: React.FC = () => {
         Add product
       </Fab>
       <ToolbarDivider />
-      <ProductsList onDelete={handleDelete} onEdit={handleOpenEdit} />
-      <Dialog
-        open={Boolean(instanceOperation)}
-        onClose={handleCloseDialog}
-        title={isEdit ? DIALOG_TITLES.edit : DIALOG_TITLES.create}
-      >
-        <ProductInstanceForm
-          initialValues={currentProduct}
-          onSubmit={isEdit ? handleSubmitUpdate : handleSubmitCreate}
-          submitCaption={isEdit ? SUBMIT_CAPTIONS.edit : SUBMIT_CAPTIONS.create}
-        />
-      </Dialog>
+      <ProductsList onDelete={handleOpenDelete} onEdit={handleOpenEdit} />
+      {isDialogOpen && (
+        <Dialog
+          onClose={handleCloseDialog}
+          title={DIALOG_TITLES[instanceOperation || ""]}
+          open
+        >
+          {isDelete ? (
+            <ProductDeleteConfirm onDelete={handleDelete(currentProduct)} />
+          ) : (
+            <ProductInstanceForm
+              initialValues={currentProduct}
+              onSubmit={isEdit ? handleSubmitUpdate : handleSubmitCreate}
+              submitCaption={SUBMIT_CAPTIONS[instanceOperation || ""]}
+            />
+          )}
+        </Dialog>
+      )}
     </Wrapper>
   );
 };

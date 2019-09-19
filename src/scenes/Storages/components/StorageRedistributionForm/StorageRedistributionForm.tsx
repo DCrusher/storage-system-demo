@@ -10,8 +10,9 @@ import Storage from "models/Storage";
 import { ProductsStore } from "store/products";
 import { StoragesStore } from "store/storages";
 import { StoragesProductsStore } from "store/storagesProducts";
-import StoragesRedistributionFields from "../StorageRedistributionFields";
+import RedistributionFields from "components/RedistributionFields";
 import FormErrors from "components/FormErrors";
+import { isEmpty } from "utils";
 
 const ERORRS = {
   storageRequired: "Please chose a storage for redistribution"
@@ -21,6 +22,7 @@ interface Props {
   submitCaption: string;
   storage: Storage;
   onSubmit: (values: any, storage: Storage) => void;
+  onDelete: (storage: Storage) => void;
 }
 
 const validationSchema = Yup.object().shape({
@@ -36,7 +38,8 @@ const validationSchema = Yup.object().shape({
 const StorageRedistributionForm: React.FC<Props> = ({
   submitCaption,
   storage,
-  onSubmit
+  onSubmit,
+  onDelete
 }): JSX.Element => {
   const products = useStore(ProductsStore);
   const storages = useStore(StoragesStore);
@@ -48,16 +51,38 @@ const StorageRedistributionForm: React.FC<Props> = ({
     ({ id }) => id !== storage.id
   );
 
-  const handleSubmit = (values: any) => {
+  const handleFormSubmit = (values: any) => {
     onSubmit(values.allocation, storage);
   };
+
+  const handleDelete = (_event: React.MouseEvent<HTMLButtonElement>) => {
+    onDelete(storage);
+  };
+
+  if (isEmpty(storageAllocation)) {
+    return (
+      <>
+        <PlaceholderText>
+          The storage is empty. Do you want to remove it?
+        </PlaceholderText>
+        <SubmitButton
+          variant="contained"
+          color="primary"
+          size="large"
+          onClick={handleDelete}
+        >
+          delete
+        </SubmitButton>
+      </>
+    );
+  }
 
   return (
     <Formik
       initialValues={{ allocation: storageAllocation }}
       validationSchema={validationSchema}
       validateOnChange={false}
-      onSubmit={handleSubmit}
+      onSubmit={handleFormSubmit}
     >
       {({ values, handleSubmit, handleChange, errors }) => (
         <WrapperForm onSubmit={handleSubmit}>
@@ -66,7 +91,7 @@ const StorageRedistributionForm: React.FC<Props> = ({
           </FormMessages>
 
           <FormContent>
-            <StoragesRedistributionFields
+            <RedistributionFields
               allocation={values.allocation}
               products={products}
               storages={storagesWithoutDistributed}
@@ -110,4 +135,8 @@ const SubmitButton = styled(Button)`
   margin-top: 40px;
   width: 100%;
   border-radius: 0;
+`;
+
+const PlaceholderText = styled.div`
+  text-align: center;
 `;

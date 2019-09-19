@@ -3,11 +3,13 @@ import styled from "styled-components";
 import { Formik } from "formik";
 import { useStore } from "effector-react";
 import * as Yup from "yup";
-import { Button, Paper, TextField, FormControl } from "@material-ui/core";
+import { Button, Paper, TextField, Grid } from "@material-ui/core";
 
+import { StorageIdWithQuantity } from "models/StorageProduct";
 import { StoragesStore } from "store/storages";
 import ProductStoragesFields from "../ProductStoragesFields";
 import FormErrors from "components/FormErrors";
+import { isEmpty } from "utils";
 
 interface Props {
   initialValues: any;
@@ -15,8 +17,28 @@ interface Props {
   submitCaption: string;
 }
 
-const validationSchema = Yup.object().shape({
-  name: Yup.string().required("name is required")
+const validationSchema = Yup.lazy((values: any) => {
+  const { storages, totalQuantity } = values;
+
+  const storagesTotalQuantity = !isEmpty(storages)
+    ? storages.reduce(
+        (acc: number, storage: StorageIdWithQuantity) =>
+          (acc += storage.quantity),
+        0
+      )
+    : 0;
+
+  return Yup.object().shape({
+    name: Yup.string().required("Name is required"),
+    totalQuantity: Yup.number()
+      .required("Total quantity is required")
+      .min(0),
+    ...(storagesTotalQuantity > totalQuantity && {
+      allocation: Yup.string().required(
+        "Exceeded total quantity for allocation"
+      )
+    })
+  });
 });
 
 const ProductInstanceForm: React.FC<Props> = ({
@@ -40,15 +62,30 @@ const ProductInstanceForm: React.FC<Props> = ({
           </FormMessages>
 
           <FormContent>
-            <TextField
-              id="name"
-              label="Name"
-              margin="normal"
-              type="text"
-              onChange={handleChange}
-              value={values.name}
-              fullWidth
-            />
+            <Grid container spacing={2}>
+              <Grid item xs={7}>
+                <TextField
+                  id="name"
+                  label="Name"
+                  margin="normal"
+                  type="text"
+                  onChange={handleChange}
+                  value={values.name}
+                  fullWidth
+                />
+              </Grid>
+              <Grid item xs={5}>
+                <TextField
+                  id="totalQuantity"
+                  label="Total Quantity"
+                  margin="normal"
+                  type="number"
+                  onChange={handleChange}
+                  value={values.totalQuantity}
+                  fullWidth
+                />
+              </Grid>
+            </Grid>
 
             <ProductsWrapper>
               <ProductStoragesFields
@@ -84,14 +121,6 @@ const FormContent = styled.div`
   padding: 0 20px;
 `;
 
-const ProductsCaption = styled.div`
-  color: gray;
-  font-weight: bold;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
 const FormMessages = styled.div`
   margin: 0 20px;
 `;
@@ -105,10 +134,4 @@ const SubmitButton = styled(Button)`
   margin-top: 40px;
   width: 100%;
   border-radius: 0;
-`;
-
-const FormControlSelect = styled(FormControl)`
-  width: 100%;
-  margin-top: 16px;
-  margin-bottom: 8px;
 `;
