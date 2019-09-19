@@ -56,7 +56,7 @@ const Storages: React.FC = () => {
     setInstanceOperation(instanceOperations.void);
   };
 
-  const handleOpensDelete = (storage: Storage) => {
+  const handleOpenDelete = (storage: Storage) => {
     setCurrentStorage(storage);
     setInstanceOperation(instanceOperations.redistribute);
   };
@@ -97,9 +97,10 @@ const Storages: React.FC = () => {
   };
 
   const isCreate = instanceOperation === instanceOperations.create;
+  const isRedistribute = instanceOperation === instanceOperations.redistribute;
   const isEdit = instanceOperation === instanceOperations.edit;
   const isDelete = instanceOperation === instanceOperations.delete;
-  const isDialogOpen = isCreate || isEdit || isDelete;
+  const isDialogOpen = isCreate || isEdit || isDelete || isRedistribute;
   const isView = instanceOperation === instanceOperations.view;
 
   return (
@@ -116,7 +117,7 @@ const Storages: React.FC = () => {
       </Fab>
       <ToolbarDivider />
       <StoragesList
-        onDelete={handleOpensDelete}
+        onDelete={handleOpenDelete}
         onEdit={handleOpenEdit}
         onView={handleOpenDetails}
       />

@@ -34,7 +34,7 @@ const Drawer: React.FC<Props> = ({
 
 export default Drawer;
 
-const Inner = styled.article`
+const Inner = styled.div`
   margin-top: 64px;
 `;
 
