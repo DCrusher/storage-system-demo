@@ -16,18 +16,22 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 
 import Product from "models/Product";
-import { ProductIdWithQuantity } from "models/StorageProduct";
 import { ProductsStore } from "store/products";
 import { StoragesProductsStore } from "store/storagesProducts";
 
 const MAX_SHOWN_COUNT = 1000;
 
 interface Props {
-  onEdit: (storage: any) => void;
+  onEdit: (product: any) => void;
   onDelete: (product: Product) => void;
+  onView: (product: Product) => void;
 }
 
-const Products: React.FC<Props> = ({ onEdit, onDelete }): JSX.Element => {
+const Products: React.FC<Props> = ({
+  onEdit,
+  onDelete,
+  onView
+}): JSX.Element => {
   const products = useStore(ProductsStore);
   const storagesProducts = useStore(StoragesProductsStore);
 
@@ -49,7 +53,7 @@ const Products: React.FC<Props> = ({ onEdit, onDelete }): JSX.Element => {
 
         return (
           <React.Fragment key={id}>
-            <ListItem button>
+            <ListItem button onClick={() => onView(product)}>
               <ListItemAvatar>
                 <Tooltip title={`Total quantity of product: ${totalQuantity}`}>
                   <Badge

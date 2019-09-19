@@ -1,24 +1,18 @@
 import * as React from "react";
 import styled from "styled-components";
 import { FieldArray } from "formik";
-import { useStore } from "effector-react";
-import AddIcon from "@material-ui/icons/Add";
-import DeleteIcon from "@material-ui/icons/Delete";
 import {
   Grid,
-  Fab,
   TextField,
-  IconButton,
   Select,
   FormControl,
   InputLabel,
   MenuItem
 } from "@material-ui/core";
 
-import StorageProduct, { ProductIdWithQuantity } from "models/StorageProduct";
+import StorageProduct from "models/StorageProduct";
 import Product from "models/Product";
 import Storage from "models/Storage";
-import { ProductsStore } from "store/products";
 
 interface Props {
   allocation: any[];
@@ -111,14 +105,6 @@ const StorageRedistributionFields: React.FC<Props> = ({
 };
 
 export default StorageRedistributionFields;
-
-const ProductsCaption = styled.div`
-  color: gray;
-  font-weight: bold;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
 
 const FormControlSelect = styled(FormControl)`
   width: 100%;

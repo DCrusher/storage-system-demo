@@ -5,20 +5,21 @@ import { Storages, Products } from "./scenes";
 
 export default {
   root: {
-    path: "/"
+    path: "/",
+    caption: "Dashboard"
   },
   app: {
-    storages: {
-      path: "/storages",
-      caption: "Storages",
-      Icon: StoreIcon,
-      Scene: Storages
-    },
     products: {
       path: "/products",
       caption: "Products",
       Icon: ShoppingCartIcon,
       Scene: Products
+    },
+    storages: {
+      path: "/storages",
+      caption: "Storages",
+      Icon: StoreIcon,
+      Scene: Storages
     }
   },
   auth: {

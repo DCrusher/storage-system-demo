@@ -14,16 +14,20 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 
 import Storage from "models/Storage";
-import { ProductIdWithQuantity } from "models/StorageProduct";
 import { StoragesStore } from "store/storages";
 import { StoragesProductsStore } from "store/storagesProducts";
 
 interface Props {
   onEdit: (storage: any) => void;
   onDelete: (storage: Storage) => void;
+  onView: (storage: Storage) => void;
 }
 
-const StoragesList: React.FC<Props> = ({ onEdit, onDelete }): JSX.Element => {
+const StoragesList: React.FC<Props> = ({
+  onEdit,
+  onDelete,
+  onView
+}): JSX.Element => {
   const storages = useStore(StoragesStore);
   const storagesProducts = useStore(StoragesProductsStore);
 
@@ -44,7 +48,7 @@ const StoragesList: React.FC<Props> = ({ onEdit, onDelete }): JSX.Element => {
 
         return (
           <React.Fragment key={storage.id}>
-            <ListItem button>
+            <ListItem button onClick={() => onView(storage)}>
               <ListItemAvatar>
                 <StoreIcon />
               </ListItemAvatar>

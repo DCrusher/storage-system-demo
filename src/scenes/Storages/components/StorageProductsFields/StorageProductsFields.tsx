@@ -1,7 +1,6 @@
 import * as React from "react";
 import styled from "styled-components";
 import { FieldArray } from "formik";
-import { useStore } from "effector-react";
 import AddIcon from "@material-ui/icons/Add";
 import DeleteIcon from "@material-ui/icons/Delete";
 import {
@@ -17,7 +16,6 @@ import {
 
 import { ProductIdWithQuantity } from "models/StorageProduct";
 import Product from "models/Product";
-import { ProductsStore } from "store/products";
 
 interface Props {
   productsWithQuantity: ProductIdWithQuantity[];

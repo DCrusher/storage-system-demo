@@ -17,6 +17,7 @@ import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import User from "./User";
 
 import SideMenu from "./SideMenu";
+import routes from "routes";
 
 const drawerWidth = 240;
 
@@ -32,6 +33,7 @@ const AppLayout: React.FC<Props> = ({
   onChangePath
 }): JSX.Element => {
   const [open, setOpen] = React.useState(true);
+  const rootPath = routes.root;
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -64,7 +66,13 @@ const AppLayout: React.FC<Props> = ({
       </TopBar>
       <LeftSideBar variant="permanent" open={open}>
         <Caption>
-          <Logo color="primary" variant="h6">
+          <Logo
+            color="primary"
+            variant="h6"
+            onClick={() => {
+              onChangePath(rootPath.path, rootPath.caption);
+            }}
+          >
             <DashboardIcon />
             Megastorage
           </Logo>
@@ -122,7 +130,7 @@ const LeftSideBar = styled(Drawer)`
             transition: width 225ms cubic-bezier(0.4, 0, 0.6, 1) 0ms;
           `
         : css`
-            overflow-x: hidden;
+            logooverflow-x: hidden;
             width: 72px;
             transition: width 195ms cubic-bezier(0.4, 0, 0.6, 1) 0ms;
           `}
@@ -135,6 +143,7 @@ const Title = styled(Typography)`
 
 const Logo = styled(Typography)`
   font-size: 16px;
+  cursor: pointer;
   display: flex;
   text-transform: uppercase;
   font-weight: bold;

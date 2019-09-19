@@ -11,14 +11,18 @@ interface Props {
   open: boolean;
   title: React.ReactNode;
   children: React.ReactNode;
+  onClose: () => void;
   className?: string;
   maxWidth?: MaxWidth;
-  onClose: () => void;
+  transitionDuration?: {
+    enter?: number;
+    exit?: number;
+  };
 }
 
 interface DialogTitleProps {
   children: React.ReactNode;
-  onClose: () => void;
+  onClose?: () => void;
 }
 
 const DialogTitle: React.FC<DialogTitleProps> = ({ onClose, children }) => {
@@ -42,7 +46,8 @@ const Dialog: React.FC<Props> = ({
   title,
   children,
   className,
-  onClose
+  onClose,
+  transitionDuration
 }): JSX.Element => {
   return (
     <MuiDialog
@@ -50,6 +55,7 @@ const Dialog: React.FC<Props> = ({
       onClose={onClose}
       className={className}
       maxWidth={maxWidth}
+      transitionDuration={transitionDuration}
     >
       <DialogTitle onClose={onClose}>{title}</DialogTitle>
       {children}

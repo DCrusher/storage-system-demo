@@ -5,6 +5,7 @@ import AddIcon from "@material-ui/icons/Add";
 import { Divider } from "@material-ui/core";
 
 import Dialog from "components/Dialog";
+import Drawer from "components/Drawer/Drawer";
 import instanceOperations from "constants/instanceOperations";
 import Product, { ProductByStorages } from "models/Product";
 
@@ -12,6 +13,7 @@ import ProductInstanceForm from "./components/ProductInstanceForm";
 import ProductsList from "./components/ProductsList";
 import { deleteProduct, createProduct, updateProduct } from "store/products";
 import ProductDeleteConfirm from "./components/ProductDeleteConfirm";
+import ProductDetails from "./components/ProductDetails";
 
 const emptyProduct = {
   id: "",
@@ -79,9 +81,20 @@ const Products: React.FC = () => {
     setInstanceOperation(instanceOperations.void);
   };
 
-  const isDialogOpen = Boolean(instanceOperation);
+  const handleOpenDetails = (product: any) => {
+    setInstanceOperation(instanceOperations.view);
+    setCurrentProduct(product);
+  };
+
+  const handleCloseDetails = () => {
+    setInstanceOperation(instanceOperations.void);
+  };
+
+  const isCreate = instanceOperation === instanceOperations.create;
   const isEdit = instanceOperation === instanceOperations.edit;
   const isDelete = instanceOperation === instanceOperations.delete;
+  const isDialogOpen = isCreate || isEdit || isDelete;
+  const isView = instanceOperation === instanceOperations.view;
 
   return (
     <Wrapper>
@@ -96,24 +109,37 @@ const Products: React.FC = () => {
         Add product
       </Fab>
       <ToolbarDivider />
-      <ProductsList onDelete={handleOpenDelete} onEdit={handleOpenEdit} />
-      {isDialogOpen && (
-        <Dialog
-          onClose={handleCloseDialog}
-          title={DIALOG_TITLES[instanceOperation || ""]}
-          open
-        >
-          {isDelete ? (
-            <ProductDeleteConfirm onDelete={handleDelete(currentProduct)} />
-          ) : (
-            <ProductInstanceForm
-              initialValues={currentProduct}
-              onSubmit={isEdit ? handleSubmitUpdate : handleSubmitCreate}
-              submitCaption={SUBMIT_CAPTIONS[instanceOperation || ""]}
-            />
-          )}
-        </Dialog>
-      )}
+      <ProductsList
+        onDelete={handleOpenDelete}
+        onEdit={handleOpenEdit}
+        onView={handleOpenDetails}
+      />
+
+      <Dialog
+        onClose={handleCloseDialog}
+        title={DIALOG_TITLES[instanceOperation || ""]}
+        open={isDialogOpen}
+        transitionDuration={{
+          exit: 0
+        }}
+      >
+        {isDelete ? (
+          <ProductDeleteConfirm onDelete={handleDelete(currentProduct)} />
+        ) : (
+          <ProductInstanceForm
+            initialValues={currentProduct}
+            onSubmit={isEdit ? handleSubmitUpdate : handleSubmitCreate}
+            submitCaption={SUBMIT_CAPTIONS[instanceOperation || ""]}
+          />
+        )}
+      </Dialog>
+      <Drawer
+        open={isView}
+        onClose={handleCloseDetails}
+        caption={currentProduct.name}
+      >
+        <ProductDetails product={currentProduct} />
+      </Drawer>
     </Wrapper>
   );
 };

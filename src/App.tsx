@@ -1,9 +1,8 @@
 import React from "react";
 import { Route } from "react-router-dom";
 import useReactRouter from "use-react-router";
-import styled from "styled-components";
-import { Button } from "@material-ui/core";
 
+import Dashboard from "scenes/Dashboard";
 import RouteModel from "models/Route";
 import routes from "routes";
 import AppLayout from "layouts/AppLayout";
@@ -21,6 +20,7 @@ const App: React.FC = () => {
 
   return (
     <AppLayout onChangePath={handleChangePath} currentCaption={currentCaption}>
+      <Route exact path={routes.root.path} component={Dashboard} />
       {appRoutes.map(({ path, Scene }) => (
         <Route key={Scene} path={path} component={Scene} />
       ))}
@@ -29,7 +29,3 @@ const App: React.FC = () => {
 };
 
 export default App;
-
-const MyButton = styled(Button)`
-  background-color: green;
-`;

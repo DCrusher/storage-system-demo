@@ -4,7 +4,8 @@ import Product, { ProductByStorages } from "models/Product";
 import ProductService from "services/ProductService";
 import {
   addAllocation,
-  changeAllocationForProduct
+  changeAllocationForProduct,
+  deleteAllocationForProduct
 } from "store/storagesProducts";
 import { seedProduct } from "utils/seeds";
 
@@ -62,11 +63,7 @@ export const ProductsStore = ProductDomain.store<Product[]>(initialState)
     return [...storagesWithoutUpdated, product];
   })
   .on(deleteProduct.done, (state, { result }) => {
-    // TODO: implement clear of storages
-    // changeAllocationForProduct({
-    //   id: result.id,
-    //   storages: null
-    // });
+    deleteAllocationForProduct({ id: result.id });
 
     return state.filter(product => product.id !== result.id);
   });

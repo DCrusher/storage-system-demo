@@ -1,22 +1,17 @@
 import * as React from "react";
 import styled from "styled-components";
-import { Formik, FormikProvider } from "formik";
+import { Formik } from "formik";
 import * as Yup from "yup";
 import { Button } from "@material-ui/core";
 import { useStore } from "effector-react";
 
-import { ProductIdWithQuantity } from "models/StorageProduct";
 import Storage from "models/Storage";
 import { ProductsStore } from "store/products";
 import { StoragesStore } from "store/storages";
 import { StoragesProductsStore } from "store/storagesProducts";
-import RedistributionFields from "components/RedistributionFields";
+import StorageRedistributionFields from "../StorageRedistributionFields";
 import FormErrors from "components/FormErrors";
 import { isEmpty } from "utils";
-
-const ERORRS = {
-  storageRequired: "Please chose a storage for redistribution"
-};
 
 interface Props {
   submitCaption: string;
@@ -50,6 +45,11 @@ const StorageRedistributionForm: React.FC<Props> = ({
   const storagesWithoutDistributed = storages.filter(
     ({ id }) => id !== storage.id
   );
+
+  storagesWithoutDistributed.unshift({
+    id: "void",
+    name: "Unallocated"
+  });
 
   const handleFormSubmit = (values: any) => {
     onSubmit(values.allocation, storage);
@@ -91,7 +91,7 @@ const StorageRedistributionForm: React.FC<Props> = ({
           </FormMessages>
 
           <FormContent>
-            <RedistributionFields
+            <StorageRedistributionFields
               allocation={values.allocation}
               products={products}
               storages={storagesWithoutDistributed}

@@ -5,14 +5,16 @@ import AddIcon from "@material-ui/icons/Add";
 import { Divider } from "@material-ui/core";
 
 import Dialog from "components/Dialog";
+import Drawer from "components/Drawer/Drawer";
 import instanceOperations from "constants/instanceOperations";
 import Storage, { StorageWithProducts } from "models/Storage";
+import { redistributeStorage } from "store/storagesProducts";
+import { deleteStorage, createStorage, updateStorage } from "store/storages";
 
 import StorageInstanceForm from "./components/StorageInstanceForm";
 import StorageRedistributionForm from "./components/StorageRedistributionForm";
 import StoragesList from "./components/StoragesList";
-import { deleteStorage, createStorage, updateStorage } from "store/storages";
-import { redistributeStorage } from "store/storagesProducts";
+import StorageDetails from "./components/StorageDetails";
 
 const emptyStorage = {
   id: "",
@@ -28,7 +30,7 @@ const emptyStorage = {
 const DIALOG_TITLES = {
   [instanceOperations.create]: "Creating storage",
   [instanceOperations.edit]: "Editing storage",
-  [instanceOperations.redistribute]: "Redestribute before delete"
+  [instanceOperations.redistribute]: "Redistribute before delete"
 };
 
 const SUBMIT_CAPTIONS = {
@@ -85,7 +87,20 @@ const Storages: React.FC = () => {
     setInstanceOperation(instanceOperations.void);
   };
 
+  const handleOpenDetails = (storage: Storage) => {
+    setInstanceOperation(instanceOperations.view);
+    setCurrentStorage(storage);
+  };
+
+  const handleCloseDetails = () => {
+    setInstanceOperation(instanceOperations.void);
+  };
+
+  const isCreate = instanceOperation === instanceOperations.create;
   const isEdit = instanceOperation === instanceOperations.edit;
+  const isDelete = instanceOperation === instanceOperations.delete;
+  const isDialogOpen = isCreate || isEdit || isDelete;
+  const isView = instanceOperation === instanceOperations.view;
 
   return (
     <Wrapper>
@@ -100,29 +115,41 @@ const Storages: React.FC = () => {
         Add storage
       </Fab>
       <ToolbarDivider />
-      <StoragesList onDelete={handleOpensDelete} onEdit={handleOpenEdit} />
-      {Boolean(instanceOperation) && (
-        <Dialog
-          open
-          onClose={handleCloseDialog}
-          title={instanceOperation && DIALOG_TITLES[instanceOperation]}
-        >
-          {instanceOperation === instanceOperations.redistribute ? (
-            <StorageRedistributionForm
-              submitCaption={SUBMIT_CAPTIONS[instanceOperation || ""]}
-              storage={currentStorage}
-              onSubmit={handleRedistributeAndDelete}
-              onDelete={handleDelete}
-            />
-          ) : (
-            <StorageInstanceForm
-              initialValues={currentStorage}
-              onSubmit={isEdit ? handleSubmitUpdate : handleSubmitCreate}
-              submitCaption={SUBMIT_CAPTIONS[instanceOperation || ""]}
-            />
-          )}
-        </Dialog>
-      )}
+      <StoragesList
+        onDelete={handleOpensDelete}
+        onEdit={handleOpenEdit}
+        onView={handleOpenDetails}
+      />
+      <Dialog
+        open={isDialogOpen}
+        onClose={handleCloseDialog}
+        title={instanceOperation && DIALOG_TITLES[instanceOperation]}
+        transitionDuration={{
+          exit: 0
+        }}
+      >
+        {instanceOperation === instanceOperations.redistribute ? (
+          <StorageRedistributionForm
+            submitCaption={SUBMIT_CAPTIONS[instanceOperation || ""]}
+            storage={currentStorage}
+            onSubmit={handleRedistributeAndDelete}
+            onDelete={handleDelete}
+          />
+        ) : (
+          <StorageInstanceForm
+            initialValues={currentStorage}
+            onSubmit={isEdit ? handleSubmitUpdate : handleSubmitCreate}
+            submitCaption={SUBMIT_CAPTIONS[instanceOperation || ""]}
+          />
+        )}
+      </Dialog>
+      <Drawer
+        open={isView}
+        onClose={handleCloseDetails}
+        caption={currentStorage.name}
+      >
+        <StorageDetails storage={currentStorage} />
+      </Drawer>
     </Wrapper>
   );
 };

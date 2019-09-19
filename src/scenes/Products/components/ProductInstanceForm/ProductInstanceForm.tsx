@@ -29,14 +29,12 @@ const validationSchema = Yup.lazy((values: any) => {
     : 0;
 
   return Yup.object().shape({
-    name: Yup.string().required("Name is required"),
+    name: Yup.string().required("Please input name"),
     totalQuantity: Yup.number()
       .required("Total quantity is required")
       .min(0),
     ...(storagesTotalQuantity > totalQuantity && {
-      allocation: Yup.string().required(
-        "Exceeded total quantity for allocation"
-      )
+      allocation: Yup.string().required("Exceeded total quantity")
     })
   });
 });

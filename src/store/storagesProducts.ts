@@ -1,5 +1,4 @@
 import { createDomain } from "effector";
-import uuid from "uuid";
 
 import StorageProduct from "models/StorageProduct";
 import { StorageWithProducts } from "models/Storage";
@@ -15,6 +14,9 @@ export const changeAllocationForStorage = StorageProductDomain.event<
 export const changeAllocationForProduct = StorageProductDomain.event<
   ProductByStorages
 >();
+export const deleteAllocationForProduct = StorageProductDomain.event<{
+  id: string;
+}>();
 export const redistributeStorage = StorageProductDomain.event<any>();
 
 const initialState: StorageProduct[] = [];
@@ -59,6 +61,14 @@ export const StoragesProductsStore = StorageProductDomain.store<
 
     return [...productsWithoutCurrent, ...newAllocation];
   })
+  .on(deleteAllocationForProduct, (state, payload) => {
+    const { id: productId } = payload;
+    const productsWithoutCurrent = state.filter(
+      product => product.productId !== productId
+    );
+
+    return [...productsWithoutCurrent];
+  })
   .on(redistributeStorage, (state, payload) => {
     const {
       storage: { id: storageId },
@@ -68,6 +78,9 @@ export const StoragesProductsStore = StorageProductDomain.store<
     const storagesWithoutCurrent = state.filter(
       storage => storage.storageId !== storageId
     );
+    const allocationWithoutVoidStorage = allocation.filter(
+      (storage: StorageProduct) => storage.storageId !== "void"
+    );
 
-    return [...storagesWithoutCurrent, ...allocation];
+    return [...storagesWithoutCurrent, ...allocationWithoutVoidStorage];
   });

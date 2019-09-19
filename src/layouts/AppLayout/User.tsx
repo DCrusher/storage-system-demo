@@ -11,7 +11,7 @@ import routes from "routes";
 
 const User: React.FC = (): JSX.Element => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const { history, location } = useReactRouter();
+  const { history } = useReactRouter();
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
